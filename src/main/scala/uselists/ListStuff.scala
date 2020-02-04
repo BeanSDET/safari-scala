@@ -6,9 +6,20 @@ import scala.annotation.tailrec
 
 object ListStuff {
   @tailrec
-  def showItems(l:List[String]) : Unit = l match {
+//  def showItems(l:List[_]) : Unit = l match {
+//  def showItems[T](l:List[T]) : Unit = l match {
+//    case Nil =>
+//    case h :: t => println(s"> $h") ; showItems(t)
+//  }
+  def processItems[T](l:List[T])(op: T => Unit) : Unit = l match {
     case Nil =>
-    case h :: t => println(s"> $h") ; showItems(t)
+    case h :: t => op(h) ; processItems(t)(op)
+  }
+
+  // NOT TAIL RECURSIVE
+  def map[T, U](l:List[T])(op: T => U): List[U] = l match {
+    case Nil => Nil
+    case h :: t => op(h) :: map(t)(op)
   }
 
   def main(args: Array[String]): Unit = {
@@ -34,6 +45,11 @@ object ListStuff {
       case _ => println("something else")
     }
     println("--------------------")
-    showItems(yetMore)
+//    showItems(yetMore)
+    processItems(yetMore)(x => println(s"lambda printing $x"))
+
+//    processItems(map(yetMore)(x => x.toUpperCase))(y => println(s">> ${y}"))
+    val doSomethingCool : String => Int = x => x.length
+    processItems(map(yetMore)(doSomethingCool))(y => println(s">> ${y}"))
   }
 }
