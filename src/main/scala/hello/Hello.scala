@@ -32,6 +32,6 @@ object Hello {
 
     var odd : Any = "Hello"
     odd = 99
-    
+
   }
 }
